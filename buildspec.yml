@@ -8,22 +8,21 @@ phases:
       - echo "Updating pip and installing dependencies..."
       - pip install --upgrade pip
       - pip install databricks-cli databricks-sdk
-
+      - pip install jq  # Install JSON validation tool for debugging
 
   pre_build:
     commands:
       - echo "Setting up Databricks authentication..."
-      - export DATABRICKS_TOKEN="dapiee6e44bd23367fa14cb92cc95cf048cb"
-      - export DATABRICKS_HOST="https://dbc-5f99fc48-0975.cloud.databricks.com"
-      - echo -e "[default]\nhost = $DATABRICKS_HOST\ntoken = $DATABRICKS_TOKEN" > ~/.databrickscfg
-      - chmod 600 ~/.databrickscfg  # Secure the file
+      - rm -f ~/.databrickscfg  # Remove any incorrect config file
+      - echo -e "[default]\nhost = https://dbc-5f99fc48-0975.cloud.databricks.com\ntoken = dapiee6e44bd23367fa14cb92cc95cf048cb" > ~/.databrickscfg
+      - chmod 600 ~/.databrickscfg  # Secure the config file
 
       - echo "Checking Databricks connection..."
       - nslookup dbc-5f99fc48-0975.cloud.databricks.com
       - curl -I $DATABRICKS_HOST
 
       - echo "Verifying Databricks workspace access..."
-      - databricks workspace ls
+      - databricks workspace ls || { echo "Databricks workspace not accessible. Exiting..."; exit 1; }
 
   build:
     commands:
@@ -31,22 +30,22 @@ phases:
       - ls -l notebooks/
 
       - echo "Checking if notebook exists..."
-      - databricks workspace ls /Workspace | grep my_notebook && echo "Notebook already exists, deleting..." && databricks workspace delete /Workspace/my_notebook
+      - databricks workspace ls /Workspace | grep my_notebook && echo "Notebook already exists, deleting..." && databricks workspace delete /Workspace/my_notebook || echo "Notebook not found, skipping deletion."
 
       - echo "Importing Databricks Notebook..."
-      - databricks workspace import notebooks/my_notebook.py /Workspace/my_notebook --language PYTHON --overwrite
+      - databricks workspace import notebooks/my_notebook.py /Workspace/my_notebook --language PYTHON --overwrite || { echo "Failed to import notebook! Exiting..."; exit 1; }
 
       - echo "Validating job configuration..."
       - python -m json.tool job-config.json || { echo "Invalid JSON format in job-config.json! Exiting..."; exit 1; }
 
-      - echo "Upgrading Databricks Jobs API..."
-      - databricks jobs configure --version=2.1
+      - echo "Setting Databricks API Version..."
+      - export DATABRICKS_API_VERSION="2.1"
 
       - echo "Deploying Databricks Job..."
-      - databricks jobs create --json job-config.json
+      - databricks jobs create --json job-config.json || { echo "Job creation failed! Exiting..."; exit 1; }
 
       - echo "Triggering Job Execution..."
-      - databricks jobs run-now --job-id <YOUR_JOB_ID>
+      - databricks jobs run-now --job-id <YOUR_JOB_ID> || { echo "Failed to trigger Databricks job! Exiting..."; exit 1; }
 
   post_build:
     commands:
