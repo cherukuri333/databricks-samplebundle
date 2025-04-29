@@ -5,7 +5,7 @@ phases:
     runtime-versions:
       python: 3.10
     commands:
-      - pip install databricks-cli==25.1
+      - pip install git+https://github.com/databricks/databricks-cli.git
   pre_build:
     commands:
       - export DATABRICKS_TOKEN="dapiee6e44bd23367fa14cb92cc95cf048cb"
