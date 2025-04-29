@@ -8,8 +8,8 @@ phases:
       - pip install databricks-cli==0.205
   pre_build:
     commands:
-      - export DATABRICKS_TOKEN=$(aws ssm get-parameter --name "/databricks/token" --with-decryption --query "Parameter.Value" --output text)
-      - export DATABRICKS_HOST=https://<your-workspace>.cloud.databricks.com
+      - export DATABRICKS_TOKEN="dapiee6e44bd23367fa14cb92cc95cf048cb"
+      - export DATABRICKS_HOST=https://<sai-ws>.cloud.databricks.com
       - echo -e "[default]\nhost = $DATABRICKS_HOST\ntoken = $DATABRICKS_TOKEN" > ~/.databrickscfg
   build:
     commands:
