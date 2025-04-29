@@ -6,17 +6,22 @@ phases:
       python: 3.10
     commands:
       - pip install --upgrade pip
-      - pip install databricks-cli
+      - pip install databricks-cli databricks-sdk
 
-  pre_build:
-    commands:
-      - echo "Setting up Databricks environment..."
-      - export DATABRICKS_TOKEN="dapiee6e44bd23367fa14cb92cc95cf048cb"
-      - export DATABRICKS_HOST="https://sai-ws.cloud.databricks.com"
-      - echo -e "[default]\nhost = $DATABRICKS_HOST\ntoken = $DATABRICKS_TOKEN" > ~/.databrickscfg
-      - chmod 600 ~/.databrickscfg  # Secure config file
+pre_build:
+  commands:
+    - echo "Setting up Databricks environment..."
+    - export DATABRICKS_TOKEN="dapiee6e44bd23367fa14cb92cc95cf048cb"
+    - export DATABRICKS_HOST="https://sai-ws.cloud.databricks.com"
+    - echo -e "[default]\nhost = $DATABRICKS_HOST\ntoken = $DATABRICKS_TOKEN" > ~/.databrickscfg
+    - chmod 600 ~/.databrickscfg
 
-  build:
-    commands:
-      - echo "Deploying Databricks bundle..."
-      - databricks bundle deploy
+build:
+  commands:
+    - echo "Importing Databricks Notebook..."
+    - databricks workspace import -f my_notebook.py -t NOTEBOOK -p /Workspace/my_notebook
+    - echo "Deploying Databricks Job..."
+    - databricks jobs create --json job-config.json
+    - echo "Triggering Job Execution..."
+    - databricks jobs run-now --job-id <YOUR_JOB_ID>
+
