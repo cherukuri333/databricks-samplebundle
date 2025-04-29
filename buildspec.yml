@@ -15,7 +15,12 @@ phases:
       - export DATABRICKS_TOKEN="dapiee6e44bd23367fa14cb92cc95cf048cb"
       - export DATABRICKS_HOST="https://sai-ws.cloud.databricks.com"
       - echo -e "[default]\nhost = $DATABRICKS_HOST\ntoken = $DATABRICKS_TOKEN" > ~/.databrickscfg
-      - chmod 600 ~/.databrickscfg
+      - chmod 600 ~/.databrickscfg  # Secure the file
+
+      - echo "Checking Databricks connection..."
+      - nslookup sai-ws.cloud.databricks.com
+      - curl -I $DATABRICKS_HOST
+
       - echo "Verifying Databricks workspace access..."
       - databricks workspace ls
 
