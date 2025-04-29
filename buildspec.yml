@@ -18,13 +18,13 @@ phases:
       - chmod 600 ~/.databrickscfg  # Secure the file
 
       - echo "Checking Databricks connection..."
-      - nslookup sai-ws.cloud.databricks.com
+      - nslookup dbc-5f99fc48-0975.cloud.databricks.com
       - curl -I $DATABRICKS_HOST
 
       - echo "Verifying Databricks workspace access..."
       - databricks workspace ls
 
-build:
+  build:
     commands:
       - echo "Checking for my_notebook.py in the repository..."
       - ls -l notebooks/
@@ -54,3 +54,4 @@ build:
 artifacts:
   files:
     - "**/*"
+
