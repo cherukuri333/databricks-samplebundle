@@ -13,7 +13,7 @@ phases:
     commands:
       - echo "Setting up Databricks authentication..."
       - export DATABRICKS_TOKEN="dapiee6e44bd23367fa14cb92cc95cf048cb"
-      - export DATABRICKS_HOST="https://sai-ws.cloud.databricks.com"
+      - export DATABRICKS_HOST="https://dbc-5f99fc48-0975.cloud.databricks.com"
       - echo -e "[default]\nhost = $DATABRICKS_HOST\ntoken = $DATABRICKS_TOKEN" > ~/.databrickscfg
       - chmod 600 ~/.databrickscfg  # Secure the file
 
