@@ -5,13 +5,18 @@ phases:
     runtime-versions:
       python: 3.10
     commands:
-      - pip install git+https://github.com/databricks/databricks-cli.git
+      - pip install --upgrade pip
+      - pip install databricks-cli
+
   pre_build:
     commands:
+      - echo "Setting up Databricks environment..."
       - export DATABRICKS_TOKEN="dapiee6e44bd23367fa14cb92cc95cf048cb"
-      - export DATABRICKS_HOST=https://<sai-ws>.cloud.databricks.com
+      - export DATABRICKS_HOST="https://sai-ws.cloud.databricks.com"
       - echo -e "[default]\nhost = $DATABRICKS_HOST\ntoken = $DATABRICKS_TOKEN" > ~/.databrickscfg
+      - chmod 600 ~/.databrickscfg  # Secure config file
+
   build:
     commands:
-      - echo "Deploying basic notebook bundle..."
+      - echo "Deploying Databricks bundle..."
       - databricks bundle deploy
