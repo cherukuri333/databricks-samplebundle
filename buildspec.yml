@@ -50,7 +50,8 @@ phases:
 
   post_build:
     commands:
-@@ -54,4 +54,3 @@
+      - echo "Deployment Completed Successfully!"
+
 artifacts:
   files:
     - "**/*"
