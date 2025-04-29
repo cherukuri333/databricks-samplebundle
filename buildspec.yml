@@ -26,12 +26,15 @@ phases:
       - databricks workspace ls
 
   build:
-    commands:
-      - echo "Deploying Databricks Job with Bundles..."
-      - databricks deploy --bundle-file databricks.yml --target development || { echo "Deployment failed! Exiting..."; exit 1; }
+  commands:
+    - echo "Upgrading Databricks CLI..."
+    - pip install --upgrade databricks-sdk
 
-      - echo "Triggering Job Execution..."
-      - databricks jobs run-now --job-id <YOUR_JOB_ID> || { echo "Failed to trigger Databricks job! Exiting..."; exit 1; }
+    - echo "Deploying Databricks Bundle..."
+    - databricks bundle deploy --target development || { echo "Deployment failed! Exiting..."; exit 1; }
+
+    - echo "Triggering Job Execution..."
+    - databricks jobs run-now --job-id <YOUR_JOB_ID> || { echo "Failed to trigger Databricks job! Exiting..."; exit 1; }
 
   post_build:
     commands:
