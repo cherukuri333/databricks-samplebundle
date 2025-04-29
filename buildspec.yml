@@ -29,8 +29,11 @@ phases:
       - echo "Checking for my_notebook.py in the repository..."
       - ls -l notebooks/
 
+      - echo "Checking if notebook exists..."
+      - databricks workspace ls /Workspace | grep my_notebook && echo "Notebook already exists, deleting..." && databricks workspace delete /Workspace/my_notebook --force
+
       - echo "Importing Databricks Notebook..."
-      - databricks workspace import notebooks/my_notebook.py /Workspace/my_notebook --language PYTHON
+      - databricks workspace import notebooks/my_notebook.py /Workspace/my_notebook --language PYTHON --overwrite
 
       - echo "Deploying Databricks Job..."
       - databricks jobs create --json job-config.json
