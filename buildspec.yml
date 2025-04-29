@@ -26,10 +26,15 @@ phases:
 
   build:
     commands:
+      - echo "Checking for my_notebook.py in the repository..."
+      - ls -l notebooks/
+
       - echo "Importing Databricks Notebook..."
-      - databricks workspace import -f my_notebook.py -t NOTEBOOK -p /Workspace/my_notebook
+      - databricks workspace import --file notebooks/my_notebook.py --type NOTEBOOK --path /Workspace/my_notebook
+
       - echo "Deploying Databricks Job..."
       - databricks jobs create --json job-config.json
+
       - echo "Triggering Job Execution..."
       - databricks jobs run-now --job-id <YOUR_JOB_ID>
 
