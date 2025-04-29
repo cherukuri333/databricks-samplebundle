@@ -1,0 +1,17 @@
+{
+  "name": "sample-job",
+  "new_cluster": {
+    "spark_version": "13.3.x-scala2.12",
+    "node_type_id": "Standard_DS3_v2",
+    "num_workers": 2
+  },
+  "notebook_task": {
+    "notebook_path": "/Workspace/my_notebook",
+    "base_parameters": {
+      "param1": "value1"
+    }
+  },
+  "timeout_seconds": 3600,
+  "max_retries": 1
+}
+
