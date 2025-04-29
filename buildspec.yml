@@ -24,7 +24,7 @@ phases:
       - echo "Verifying Databricks workspace access..."
       - databricks workspace ls
 
-  build:
+build:
     commands:
       - echo "Checking for my_notebook.py in the repository..."
       - ls -l notebooks/
@@ -34,6 +34,12 @@ phases:
 
       - echo "Importing Databricks Notebook..."
       - databricks workspace import notebooks/my_notebook.py /Workspace/my_notebook --language PYTHON --overwrite
+
+      - echo "Validating job configuration..."
+      - python -m json.tool job-config.json || { echo "Invalid JSON format in job-config.json! Exiting..."; exit 1; }
+
+      - echo "Upgrading Databricks Jobs API..."
+      - databricks jobs configure --version=2.1
 
       - echo "Deploying Databricks Job..."
       - databricks jobs create --json job-config.json
