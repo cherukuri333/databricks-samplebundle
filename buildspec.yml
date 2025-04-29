@@ -27,26 +27,11 @@ phases:
 
   build:
     commands:
-      - echo "Checking for my_notebook.py in the repository..."
-      - ls -l notebooks/
-
-      - echo "Checking if notebook exists..."
-      - databricks workspace ls /Workspace | grep my_notebook && echo "Notebook already exists, deleting..." && databricks workspace delete /Workspace/my_notebook
-
-      - echo "Importing Databricks Notebook..."
-      - databricks workspace import notebooks/my_notebook.py /Workspace/my_notebook --language PYTHON --overwrite
-
-      - echo "Validating job configuration..."
-      - python -m json.tool job-config.json || { echo "Invalid JSON format in job-config.json! Exiting..."; exit 1; }
-
-      - echo "Upgrading Databricks Jobs API..."
-      - databricks jobs configure --version=2.1
-
-      - echo "Deploying Databricks Job..."
-      - databricks jobs create --json job-config.json
+      - echo "Deploying Databricks Job with Bundles..."
+      - databricks deploy --bundle-file databricks.yml --target development || { echo "Deployment failed! Exiting..."; exit 1; }
 
       - echo "Triggering Job Execution..."
-      - databricks jobs run-now --job-id <YOUR_JOB_ID>
+      - databricks jobs run-now --job-id <YOUR_JOB_ID> || { echo "Failed to trigger Databricks job! Exiting..."; exit 1; }
 
   post_build:
     commands:
