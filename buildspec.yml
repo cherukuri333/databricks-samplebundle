@@ -30,7 +30,7 @@ phases:
       - ls -l notebooks/
 
       - echo "Checking if notebook exists..."
-      - databricks workspace ls /Workspace | grep my_notebook && echo "Notebook already exists, deleting..." && databricks workspace delete /Workspace/my_notebook --force
+      - databricks workspace ls /Workspace | grep my_notebook && echo "Notebook already exists, deleting..." && databricks workspace delete /Workspace/my_notebook
 
       - echo "Importing Databricks Notebook..."
       - databricks workspace import notebooks/my_notebook.py /Workspace/my_notebook --language PYTHON --overwrite
